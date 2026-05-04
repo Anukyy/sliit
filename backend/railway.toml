@@ -1,0 +1,18 @@
+# Railway: create a service with Root Directory set to `backend` (for monorepo),
+# or deploy from a repo that only contains this folder.
+#
+# Required variables in Railway → Variables:
+#   MONGODB_URI   → MongoDB Atlas or Railway Mongo plugin connection string
+#   JWT_SECRET    → long random string (never commit real values)
+#
+# Optional:
+#   PUBLIC_HOST   → your Railway app hostname (e.g. xxx.up.railway.app) for logs/links
+# PORT is injected automatically by Railway.
+
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "npm start"
+healthcheckPath = "/api/health"
+healthcheckTimeout = 100
