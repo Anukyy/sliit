@@ -141,7 +141,6 @@ router.post("/bookings", requireCustomer, async (req, res) => {
       let linkedOrderSum = 0;
       for (const o of orders) {
         if (String(o.customer) !== String(req.customer.id)) return res.status(403).json({ error: "Invalid food order reference" });
-        if (o.booking) return res.status(400).json({ error: "A food order is already linked to another booking" });
         linkedOrderSum += Math.round(Number(o.subtotal) || 0);
       }
       if (linkedOrderSum !== restaurantFolio) return res.status(400).json({ error: "Restaurant total must match linked food orders" });
@@ -183,9 +182,6 @@ router.post("/bookings", requireCustomer, async (req, res) => {
     });
 
     if (room) await Room.updateOne({ _id: room._id, status: "Available" }, { $set: { status: "Reserved" } });
-    if (linkedIds.length > 0) {
-      await FoodOrder.updateMany({ _id: { $in: linkedIds }, customer: req.customer.id }, { $set: { booking: doc._id } });
-    }
     const populated = await Booking.findById(doc._id).populate("room", "roomNumber roomType variant basePricePerNight").populate("offer", "title packagePrice").lean();
     res.status(201).json(populated);
   } catch (err) {

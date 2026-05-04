@@ -15,8 +15,6 @@ const orderLineSchema = new mongoose.Schema(
 const foodOrderSchema = new mongoose.Schema(
   {
     customer: { type: mongoose.Schema.Types.ObjectId, ref: "Customer", required: true, index: true },
-    /** Set when guest completes room booking and links this room-bill order */
-    booking: { type: mongoose.Schema.Types.ObjectId, ref: "Booking", default: null, index: true },
     lines: { type: [orderLineSchema], required: true, validate: [(v) => Array.isArray(v) && v.length > 0, "lines"] },
     subtotal: { type: Number, required: true, min: 0 },
     orderStatus: { type: String, enum: FOOD_ORDER_STATUSES, default: "received" },
