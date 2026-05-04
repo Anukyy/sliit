@@ -1,9 +1,6 @@
 import mongoose from "mongoose";
 
-export const FOOD_PAYMENT_METHODS = ["room_bill", "online", "cash"];
-export const FOOD_PAYMENT_STATUSES = ["pending", "paid"];
 export const FOOD_ORDER_STATUSES = ["received", "preparing", "ready", "completed", "cancelled"];
-export const FOOD_SETTLEMENT_METHODS = ["cash", "card", "online"];
 
 const orderLineSchema = new mongoose.Schema(
   {
@@ -22,10 +19,6 @@ const foodOrderSchema = new mongoose.Schema(
     booking: { type: mongoose.Schema.Types.ObjectId, ref: "Booking", default: null, index: true },
     lines: { type: [orderLineSchema], required: true, validate: [(v) => Array.isArray(v) && v.length > 0, "lines"] },
     subtotal: { type: Number, required: true, min: 0 },
-    paymentMethod: { type: String, enum: FOOD_PAYMENT_METHODS, required: true },
-    paymentStatus: { type: String, enum: FOOD_PAYMENT_STATUSES, default: "pending" },
-    settledVia: { type: String, enum: FOOD_SETTLEMENT_METHODS, default: null },
-    settledAt: { type: Date, default: null },
     orderStatus: { type: String, enum: FOOD_ORDER_STATUSES, default: "received" },
   },
   { timestamps: true }

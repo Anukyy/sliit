@@ -43,7 +43,6 @@ router.post("/food-orders", requireCustomer, async (req, res) => {
       customer: req.customer.id,
       lines,
       subtotal,
-      paymentMethod: "cash",
       orderStatus: "received",
     });
 

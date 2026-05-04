@@ -129,7 +129,7 @@ router.post("/bookings", requireCustomer, async (req, res) => {
       const built = await buildFoodLinesFromPendingRequest(req.body.pendingFoodLines);
       if (built.error) return res.status(400).json({ error: built.error });
       if (Math.round(Number(built.subtotal)) !== restaurantFolio) return res.status(400).json({ error: "Restaurant folio total mismatch" });
-      const doc = await FoodOrder.create({ customer: req.customer.id, lines: built.lines, subtotal: built.subtotal, paymentMethod: "room_bill", paymentStatus: "pending", settledVia: null, settledAt: null, orderStatus: "received" });
+      const doc = await FoodOrder.create({ customer: req.customer.id, lines: built.lines, subtotal: built.subtotal, orderStatus: "received" });
       linkedIds = [String(doc._id)];
     }
 
@@ -141,7 +141,6 @@ router.post("/bookings", requireCustomer, async (req, res) => {
       let linkedOrderSum = 0;
       for (const o of orders) {
         if (String(o.customer) !== String(req.customer.id)) return res.status(403).json({ error: "Invalid food order reference" });
-        if (o.paymentMethod !== "room_bill") return res.status(400).json({ error: "Only room-bill food orders can be attached" });
         if (o.booking) return res.status(400).json({ error: "A food order is already linked to another booking" });
         linkedOrderSum += Math.round(Number(o.subtotal) || 0);
       }
