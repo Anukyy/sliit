@@ -6,6 +6,10 @@ import { bootstrapData } from "./seed/bootstrap.js";
 
 const app = createApp();
 
+app.get("/", (req, res) => {
+  res.send("API is running !");
+});
+
 async function main() {
   let dbConnected = false;
   try {
@@ -44,7 +48,8 @@ async function main() {
     });
   };
 
-  startServer(config.port);
+  const PORT = process.env.PORT || 5000;
+  startServer(PORT);
 }
 
 main().catch((err) => {
